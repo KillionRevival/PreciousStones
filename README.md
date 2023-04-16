@@ -14,9 +14,41 @@ The latest versions of this plugin are only compatible with 1.18.* ! If you want
 
 ## Note:
 
+The plugin does not belong to me, I am updating it for my own use. If you want me to fix any bugs, please report them, we will try to fix them.
+
 Pull-requests for bug fixes or new features are welcomed and will be merged in if they do not break existing functionalities.
 
 ## Dynmap-PreciousStones:
 
 If you want to get the updated Dynmap-PreciousStones plugin, please head to this github: [Dynmap-Precioustones](https://github.com/FireController1847/DynmapPS)
 
+
+## Loading dependency
+
+You can add PreciousStones as a dependency via maven/gradle
+
+### Maven
+```
+    <dependency>
+        <groupId>com.github.xGlenor</groupId>
+        <artifactId>PreciousStones</artifactId>
+        <version>VERSION</version>
+    </dependency>
+
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+```
+
+### Gradle
+```
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+
+    implementation 'com.github.xGlenor:PreciousStones:VERSION'
+```

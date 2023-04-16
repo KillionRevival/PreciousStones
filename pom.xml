@@ -7,8 +7,7 @@
     <artifactId>PreciousStones</artifactId>
     <version>1.19</version>
     <name>PreciousStones</name>
-    <url>https://github.com/elBukkit/PreciousStones</url>
-
+    <url>https://github.com/xGlenor/PreciousStones</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -63,7 +62,7 @@
             <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.2.4</version>
+				<version>3.3.0</version>
 				<configuration>
 					<artifactSet>
 						<includes>
@@ -104,13 +103,13 @@
     <!-- Dependencies -->
 
     <dependencies>
-        <dependency>
+        <dependency> <!-- GIT -->
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
             <version>1.19-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
+        <dependency> <!-- GIT -->
             <groupId>com.github.MilkBowl</groupId>
             <artifactId>VaultAPI</artifactId>
             <version>1.7</version>
