@@ -5,7 +5,7 @@
 
     <groupId>net.sacredlabyrinth.Phaed</groupId>
     <artifactId>PreciousStones</artifactId>
-    <version>1.19</version>
+    <version>1.20</version>
     <name>PreciousStones</name>
     <url>https://github.com/xGlenor/PreciousStones</url>
 
@@ -103,10 +103,10 @@
     <!-- Dependencies -->
 
     <dependencies>
-        <dependency> <!-- GIT -->
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.19-R0.1-SNAPSHOT</version>
+        <dependency>
+            <groupId>io.papermc.paper</groupId>
+            <artifactId>paper-api</artifactId>
+            <version>1.20.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency> <!-- GIT -->
