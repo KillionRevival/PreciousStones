@@ -565,6 +565,7 @@ public final class CommandManager implements TabExecutor {
                                 int overflow = field.expand(num, dir, bypass);
 
                                 if (overflow <= 0 || bypass) {
+                                    PreciousStones.getInstance().getStorageManager().offerField(field);
                                     ChatHelper.send(sender, "cuboidExpanded");
 
                                     if (plugin.getSettingsManager().isVisualizeOnExpand()) {
@@ -663,6 +664,7 @@ public final class CommandManager implements TabExecutor {
                                 }
 
                                 field.contract(num, dir);
+                                PreciousStones.getInstance().getStorageManager().offerField(field);
                                 ChatHelper.send(sender, "cuboidContracted");
                                 return true;
                             } else {

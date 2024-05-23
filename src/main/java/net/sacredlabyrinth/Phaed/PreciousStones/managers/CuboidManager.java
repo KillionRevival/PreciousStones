@@ -281,6 +281,7 @@ public class CuboidManager {
             plugin.getForceFieldManager().addAllowOverlappingOwners(field);
             plugin.getVisualizationManager().visualizeSingleField(player, field);
             plugin.getStorageManager().offerField(field);
+            PreciousStones.getInstance().getStorageManager().offerField(field);
             plugin.getCommunicationManager().notifyPlaceCuboid(player, field);
             return true;
         }
