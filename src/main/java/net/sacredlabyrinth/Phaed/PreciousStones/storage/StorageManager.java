@@ -821,34 +821,34 @@ public class StorageManager {
             cuboidCreator = new DynamicQueryCreator(creator);
             if (field.isDirty(DirtyFieldReason.DIMENSIONS)) {
                 cuboidCreator.add("minx = ?, miny = ?, minz = ?, maxx = ?, maxy = ?, maxz = ?",
-                    field.getMinx(), field.getMiny(), field.getMinz(), field.getMaxx(), field.getMaxy(), field.getMaxz());
+                    field.getMinx(), field.getMiny(), field.getMinz(), field.getMaxx(), field.getMaxy(), field.getMaxz()
+                );
             }
         } else {
             cuboidCreator = null;
         }
         String fieldUpdates = creator.toQueryString();
-        if (fieldUpdates.isEmpty()) {
+        String cuboidUpdates = cuboidCreator != null ? cuboidCreator.toQueryString() : "";
+        if (fieldUpdates.isEmpty() && cuboidUpdates.isEmpty()) {
             return;
         }
         try {
-            try (PreparedStatement prepStmt = conn.prepareStatement(
-                    "UPDATE `pstone_fields` SET " + fieldUpdates + " "
-                    + "WHERE x = ? AND y = ? AND z = ? AND world = ?")) {
-                int setCount = creator.setParameters(prepStmt, 0);
-                SqlUtils.setFieldCoordinates(prepStmt, field, setCount);
-                prepStmt.execute();
+            if (!fieldUpdates.isEmpty()) {
+                try (PreparedStatement prepStmt = conn.prepareStatement(
+                        "UPDATE `pstone_fields` SET " + fieldUpdates + " "
+                                + "WHERE x = ? AND y = ? AND z = ? AND world = ?")) {
+                    int setCount = creator.setParameters(prepStmt, 0);
+                    SqlUtils.setFieldCoordinates(prepStmt, field, setCount);
+                    prepStmt.execute();
+                }
             }
-            if (cuboidCreator != null) {
-                String cuboidUpdates = cuboidCreator.toQueryString();
-                if (!cuboidUpdates.isEmpty()) {
-
-                    try (PreparedStatement prepStmt = conn.prepareStatement(
-                            "UPDATE `pstone_cuboids` SET " + cuboidUpdates + " "
-                            + "WHERE x = ? AND y = ? AND z = ? AND world = ?")) {
-                        int setCount = cuboidCreator.setParameters(prepStmt, 0);
-                        SqlUtils.setFieldCoordinates(prepStmt, field, setCount);
-                        prepStmt.execute();
-                    }
+            if (!cuboidUpdates.isEmpty()) {
+                try (PreparedStatement prepStmt = conn.prepareStatement(
+                        "UPDATE `pstone_cuboids` SET " + cuboidUpdates + " "
+                                + "WHERE x = ? AND y = ? AND z = ? AND world = ?")) {
+                    int setCount = cuboidCreator.setParameters(prepStmt, 0);
+                    SqlUtils.setFieldCoordinates(prepStmt, field, setCount);
+                    prepStmt.execute();
                 }
             }
         } finally {
