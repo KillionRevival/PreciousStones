@@ -1,9 +1,13 @@
 package net.sacredlabyrinth.Phaed.PreciousStones.managers;
 
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.node.Node;
+import net.luckperms.api.query.QueryOptions;
 import net.sacredlabyrinth.Phaed.PreciousStones.PreciousStones;
 import net.sacredlabyrinth.Phaed.PreciousStones.field.FieldSettings;
 import net.sacredlabyrinth.Phaed.PreciousStones.helpers.ChatHelper;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.RegisteredServiceProvider;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,12 +18,20 @@ import java.util.List;
  */
 public class LimitManager {
     private PreciousStones plugin;
+    final LuckPerms luckPerms;
 
     /**
      *
      */
     public LimitManager() {
         plugin = PreciousStones.getInstance();
+        final RegisteredServiceProvider<LuckPerms> rsp = plugin.getServer().getServicesManager().getRegistration(LuckPerms.class);
+        if (rsp != null) {
+            luckPerms = rsp.getProvider();
+        }
+        else {
+            luckPerms = null;
+        }
     }
 
     /**
@@ -107,26 +119,43 @@ public class LimitManager {
             }
 
             return -1;
+        }
 
-        } else if (plugin.getSettingsManager().isUsePermissionBasedLimits()) {
+        //If config flag usePermissionBasedLimits set to true!
+        /**
+         * Player must have preciousstones.limit.field_title
+         * where field_title is the name of a configured field, in lowercase, with spaces replaced with underscores.
+         * if not, then there will be no limit
+         */
 
-            //If config flag usePermissionBasedLimits set to true!
-            /**
-             * Player must have preciousstones.limit.field_title
-             * where field_title is the name of a configured field, in lowercase, with spaces replaced with underscores.
-             * if not, then there will be no limit
-             */
+        /**
+         * Use luckperms additive permissions if luckperms is loaded
+         */
+        final String prefix = String.format("preciousstones.limit.%s.", fs.getTitle().replace(" ", "_").toLowerCase());
 
-
+        if (luckPerms == null) {
             for (int i = fs.getMaxPerPlayer(); i >= 0; i--) {
-                if (plugin.getPermissionsManager().has(player, String.format("preciousstones.limit.%s.%d", fs.getTitle().replace(" ", "_").toLowerCase(), i))) {
-                        return i;
-                    }
+                if (plugin.getPermissionsManager()
+                          .has(player, prefix + i)) {
+                    return i;
                 }
-
             }
 
+            return -1;
+        }
 
-        return -1;
+        final List<Node> permissions = luckPerms.getPlayerAdapter(Player.class)
+                                                .getUser(player)
+                                                .resolveInheritedNodes(QueryOptions.nonContextual())
+                                                .stream().toList();
+
+        return permissions
+                .stream()
+                .filter(Node::getValue) // only true nodes
+                .filter(node -> !node.hasExpired())
+                .map(Node::getKey)
+                .filter(permission -> permission.startsWith(prefix))
+                .mapToInt(str -> Integer.parseInt(str.substring(str.lastIndexOf(".") + 1)))
+                .sum();
     }
 }

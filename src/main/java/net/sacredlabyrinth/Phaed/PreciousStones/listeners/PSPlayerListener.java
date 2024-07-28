@@ -175,6 +175,17 @@ public class PSPlayerListener implements Listener {
 
 		if (field != null) {
 			if (FieldFlag.PREVENT_TELEPORT.applies(field, player)) {
+				if (event.getCause() == PlayerTeleportEvent.TeleportCause.ENDER_PEARL) {
+					return;
+				}
+				if (event.getCause() == PlayerTeleportEvent.TeleportCause.PLUGIN) {
+					return;
+				}
+				if (event.getCause() == PlayerTeleportEvent.TeleportCause.COMMAND) {
+					return;
+				}
+
+
 				if (!plugin.getPermissionsManager().has(event.getPlayer(), "preciousstones.bypass.teleport")) {
 					event.setCancelled(true);
 					ChatHelper.send(player, "cannotTeleportInsideField");
